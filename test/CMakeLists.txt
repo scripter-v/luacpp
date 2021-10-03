@@ -15,30 +15,17 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
+find_package(Lua REQUIRED)
+message ("Lua library: ${LUA_LIBRARIES}")
+message ("Lua include dir: ${LUA_INCLUDE_DIR}")
+message ("Lua version: ${LUA_VERSION_STRING}")
+
 get_filename_component(TOP_DIR "${CMAKE_CURRENT_SOURCE_DIR}" PATH)
 set(SRC "${TOP_DIR}/src")
 
-if (NOT LUACPP_LUA_LIBRARIES)
-  find_package(Lua51)
-  if (NOT LUA_LIBRARIES)
-    message( FATAL_ERROR "Please set LUACPP_LUA_LIBRARIES variable to your Lua library file. For example:\n cmake -DLUACPP_LUA_LIBRARIES=c:\\lua\\lua5.1.lib ...")
-  endif()
-  set(LUACPP_LUA_LIBRARIES ${LUA_LIBRARIES})
-endif()
-message ("Lua library: ${LUACPP_LUA_LIBRARIES}")
-
-if (NOT LUACPP_LUA_INCLUDE_DIR)
-  find_package(Lua51)
-  if (NOT LUA_INCLUDE_DIR)
-    message( FATAL_ERROR "Please set LUACPP_LUA_INCLUDE_DIR variable to the path to your lua.h file. For example:\n cmake -DLUACPP_LUA_INCLUDE_DIR=c:\\lua\\include ...")
-  endif()
-  set(LUACPP_LUA_INCLUDE_DIR ${LUA_INCLUDE_DIR})
-endif()
-message ("Lua include dir: ${LUACPP_LUA_INCLUDE_DIR}")
-
 include_directories(
   ${TOP_DIR}/include
-  ${LUACPP_LUA_INCLUDE_DIR}
+  ${LUA_INCLUDE_DIR}
 )
 
 set(TEST_SOURCES
@@ -49,7 +36,7 @@ add_executable(luacpp_test
 
 target_compile_definitions(luacpp_test PUBLIC "CATCH_CONFIG_MAIN")
 
-target_link_libraries(luacpp_test ${LUACPP_LUA_LIBRARIES})
+target_link_libraries(luacpp_test ${LUA_LIBRARIES})
 target_link_libraries(luacpp_test Catch2::Catch2)
 
 add_test(CommonTests luacpp_test)
