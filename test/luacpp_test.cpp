@@ -1,5 +1,4 @@
-#include <catch.hpp>
-
+#include <catch2/catch.hpp>
 #include <luacpp/luacpp>
 
 SCENARIO("Test state (only native calls)") {
